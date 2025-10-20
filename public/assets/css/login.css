@@ -1,0 +1,129 @@
+:root{
+  --mainColor: #191919;
+  --seconColor: #2d2d2d;
+}
+
+body{
+  /* font-family: 'Roboto Condensed', sans-serif; */
+  background-color: #e9ecef;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;  
+}
+
+.box-login{
+  background-color: white;
+  border-radius: 2px;
+  box-shadow: 0px 7px 15px #3838382c;
+  display: flex;
+  align-items: center;
+}
+
+.form-login{
+  padding: 50px 60px;
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+}
+
+.box-img{
+  width: 40vw;
+  height: 400px;
+  overflow: hidden;
+  display: none;
+}
+
+.child-img{
+  width: 100%;
+  height: 100%;
+  background-color: #1a2432;
+  background-image: url('../img/background-2.png');
+  background-size: cover;
+  background-position: center;
+  border-radius: 2px 0 0 2px;
+}
+
+.text-img{
+  /* background-image: linear-gradient(90deg, #1369a7, rgba(0, 0, 0, 0)); */
+  width: 100%;
+  height: 100%;
+  position: relative;
+  bottom: 400px;
+  display: flex;
+  flex-direction: column;
+  justify-content: start;
+  padding: 50px 60px; 
+  color: white;
+  border-radius: 2px 0 0 2px;
+}
+
+.box-img::before{
+  content: "";
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  /* background-image: linear-gradient(90deg, var(--mainColor), rgba(0, 0, 0, 0)); */
+  background-color: black;
+  z-index: 1001;
+}
+
+.maskot{
+  width: 150px;
+}
+
+.box-input{
+  background-color: whitesmoke;
+  width: 240px;
+  padding: 5px 10px;
+  border-radius: 2px;
+  /* margin-bottom: 10px; */
+  display: flex;
+  align-items: center;  
+}
+
+.logo{
+  width: 60px;
+  margin-bottom: 15px;
+}
+
+.box-input input{
+  width: 100%;
+  background-color: transparent;
+  border: none;
+  padding: 0 7px;
+  font-size: 14px;
+}
+
+.box-input input:focus{
+  outline: none;
+}
+
+.box-input input::placeholder{
+  font-size: 14px;
+  opacity: 50%;
+}
+
+.btn-login{
+  width: 100px;
+  border: none;
+  background-color: #00b297;
+  /* background-image: linear-gradient(90deg, #1a2432, #1e375b); */
+  color: white;
+  text-transform: uppercase;
+  border-radius: 2px;
+  padding: 5px 0;
+  transition: ease 1s;
+}
+
+@media (min-width: 992px) {
+
+  .box-img{
+    width: 40vw;
+    height: 400px;
+    overflow: hidden;
+    display: block;
+  }
+
+}

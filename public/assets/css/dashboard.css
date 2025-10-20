@@ -1,0 +1,13 @@
+.welcome-box {
+  position: relative;
+  background-color: #f9fafb;
+  padding: 20px 30px;
+  overflow: hidden;
+
+  background: 
+    linear-gradient(120deg, rgb(255, 255, 255), transparent 100%),
+    url('../img/bg-daun.png') no-repeat right;
+
+  background-size: cover, 550px; /* gradient full, daun 500px */
+  background-blend-mode: color-burn; /* campur gradient & gambar */
+}
