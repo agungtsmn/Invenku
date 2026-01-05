@@ -97,7 +97,7 @@
 </head>
 <body>
   <header>
-    <img class="logo" src="http://invenku.test/storage/logokemdikbud.png" alt="">
+    <img class="logo" src="https://invenku.pusmendik.com/storage/logokemdikbud.png" alt="">
     <div class="text-center">
       <p class="tx-16"><b>KEMENTERIAN PENDIDIKAN DASAR DAN MENENGAH</b></p>
       <p class="tx-16"><b>BADAN STANDAR, KURIKULUM, DAN ASESMEN PENDIDIKAN <br>PUSAT ASESMEN PENDIDIKAN</b></p>
