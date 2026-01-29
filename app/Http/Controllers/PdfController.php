@@ -9,6 +9,7 @@ use App\Models\PermintaanAtk;
 use App\Models\PeminjamanRuang;
 use Barryvdh\DomPDF\Facade\Pdf;
 use App\Models\PeminjamanKendaraan;
+use App\Models\TandaTangan;
 
 class PdfController extends Controller
 {
@@ -28,12 +29,15 @@ class PdfController extends Controller
     }
 
     public function permintaanAtkPdf(PermintaanAtk $permintaanAtk)
-    {
+    {   
+        $userAtasNama = User::where('pegawai_id', $permintaanAtk->atas_nama)->with('pegawai.tandaTangan')->first();
+        $permintaanAtk->nama_an = $userAtasNama->pegawai->nama;
+        $permintaanAtk->tanda_tangan_an = $userAtasNama->pegawai->tandaTangan->tanda_tangan;
         return $this->generatePdf($permintaanAtk, 'content.domPdf.permintaanAtk');
     }
 
     public function peminjamanRuangPdf(PeminjamanRuang $peminjamanRuang)
-    {
+    {   
         return $this->generatePdf($peminjamanRuang, 'content.domPdf.peminjamanRuang');
     }
 

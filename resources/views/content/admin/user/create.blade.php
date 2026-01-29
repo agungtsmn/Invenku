@@ -74,9 +74,12 @@
                   <option label="Pilih Role"></option>
                   <option value="Pegawai">Pegawai</option>
                   <option value="Petugas">Petugas</option>
-                  <option value="Verifikator">Verifikator</option>
-                  <option value="Penanggung Jawab">Penanggung Jawab</option>
+                  <option value="Petugas BMN">Petugas BMN</option>
+                  <option value="Katim">Katim</option>
+                  <option value="PPK">PPK</option>
                   <option value="Kasubag TU">Kasubag TU</option>
+                  <option value="Resepsionis">Resepsionis</option>
+                  <option value="Viewer">Viewer</option>
                   <option value="Super Admin">Super Admin</option>
                 </select>
                 @error('role')  

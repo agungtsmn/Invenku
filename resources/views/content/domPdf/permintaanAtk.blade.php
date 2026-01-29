@@ -107,7 +107,7 @@
           <th>Jumlah</th>
           <th>Satuan</th>
           <th>Spesifikasi</th>
-          <th>Kesediaan</th>
+          {{-- <th>Kesediaan</th> --}}
         </tr>
       </thead>
       <tbody>
@@ -118,7 +118,7 @@
             <td class="text-center tx-14">{{ $atk['jumlah'] ?? "-"  }}</td>
             <td class="text-center tx-14">{{ $atk['satuan'] ?? "-" }}</td>
             <td class="text-center tx-14">{{ $atk['spesifikasi'] ?? "-" }}</td>
-            <td class="tx-14">{{ $atk['kesediaan'] ?? "-" }}</td>
+            {{-- <td class="tx-14">{{ $atk['kesediaan'] ?? "-" }}</td> --}}
           </tr>
         @endforeach
       </tbody>
@@ -134,19 +134,25 @@
         <tr>
           @if ($data->signature_kasubag_tu)
             <td>
-              <img src="{{ asset('storage/signature-kasubag-tu/' . $data->signature_kasubag_tu) }}" alt="Tanda Tangan Kasubag TU" width="200px">
+              <img src="{{ asset('storage/tanda_tangan/' . $data->signature_kasubag_tu) }}" alt="Tanda Tangan Kasubag TU" width="200px">
+              <br><b>{{ $kasubagTu->pegawai->nama ?? "-" }}</b><br>NIP {{ $kasubagTu->pegawai->nip ?? "-" }}
+            </td>
+          @elseif ($data->atas_nama)
+            <td>
+              <img src="{{ asset('storage/tanda_tangan/' . $data->tanda_tangan_an) }}" alt="Tanda Tangan Atas Nama" width="200px">
+              <br><b>a.n. {{ $data->nama_an ?? "-" }}</b>
               <br><b>{{ $kasubagTu->pegawai->nama ?? "-" }}</b><br>NIP {{ $kasubagTu->pegawai->nip ?? "-" }}
             </td>
           @else
             <td><br><br><br><br><br><b>{{ $kasubagTu->pegawai->nama ?? "-" }}</b><br>NIP {{ $kasubagTu->pegawai->nip ?? "-" }}</td>
           @endif
-          @if ($data->signature_verifikator)
+          @if ($data->signature_petugas_bmn)
             <td>
-              <img src="{{ asset('storage/signature-verifikator/' . $data->signature_verifikator) }}" alt="Tanda Tangan Verifikator" width="200px">
-              <br><b>{{ $data->fVerif->pegawai->nama ?? "-" }}</b><br>NIP {{ $data->fVerif->pegawai->nip  ?? "-" }}
+              <img src="{{ asset('storage/tanda_tangan/' . $data->signature_petugas_bmn) }}" alt="Tanda Tangan Petugas BMN" width="200px">
+              <br><b>{{ $data->fPetugasBmn->pegawai->nama ?? "-" }}</b><br>NIP {{ $data->fPetugasBmn->pegawai->nip  ?? "-" }}
             </td>
           @else
-            <td><br><br><br><br><br><b>{{ $data->fVerif->pegawai->nama ?? "-" }}</b><br>NIP {{ $data->fVerif->pegawai->nip  ?? "-" }}</td>
+            <td><br><br><br><br><br><b>{{ $data->fPetugasBmn->pegawai->nama ?? "-" }}</b><br>NIP {{ $data->fPetugasBmn->pegawai->nip  ?? "-" }}</td>
           @endif
         </tr>
       </tbody>

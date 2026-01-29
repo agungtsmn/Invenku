@@ -28,39 +28,39 @@
       <nav class="breadcrumb pd-0 mg-0 tx-12">
         <a class="breadcrumb-item" href="/dashboard">Invenku Pusmendik</a>
         <a class="breadcrumb-item" href="/permintaanAtk">Permintaan ATK</a>
-        <span class="breadcrumb-item active">Verifikasi</span>
+        <span class="breadcrumb-item active">Persetujuan</span>
       </nav>
     </div><!-- br-pageheader -->
     <div class="pd-x-20 pd-sm-x-30 pd-t-20 pd-sm-t-30">
-      <h4 class="tx-gray-800 mg-b-5">Verifikasi Permintaan ATK</h4>
-      <p class="mg-b-0">Memverifikasi Pengajuan Permintaan ATK</p>
+      <h4 class="tx-gray-800 mg-b-5">Pengajuan Permintaan ATK</h4>
+      <p class="mg-b-0">Proses Persetujuan Permintaan Alat Tulis Kantor</p>
     </div>
 
     <div class="br-pagebody">
       <div class="br-section-wrapper">
 
-        <form class="form-layout form-layout-2" action="/permintaanAtk/{{ $permintaanAtk->id }}/accepted" id="accept{{ $permintaanAtk->id }}" method="post">
+        <form class="form-layout form-layout-2" action="/permintaanAtk/{{ $permintaanAtk->id }}/accPpk" id="accept{{ $permintaanAtk->id }}" method="post">
           @csrf
           @method('put')
           <div class="row no-gutters">
-            <div class="col-md-6">
+            <div class="col-md-12">
               <div class="form-group">
                 <label class="form-control-label">Pemohon</label>
                 <input class="form-control" type="text" value="{{ $permintaanAtk->fPemohon->nama }}" readonly>  
               </div>
             </div><!-- col-6 -->
             <div class="col-md-6">
-              <div class="form-group mg-md-l--1">
+              <div class="form-group bd-t-0-force">
                 <label class="form-control-label">Penanggung Jawab</label>
-                <input class="form-control" type="text" value="{{ $permintaanAtk->fPenanggungJawab->pegawai->nama }}" readonly>  
+                <input class="form-control" type="text" value="{{ $permintaanAtk->fKatim->pegawai->nama }}" readonly>  
               </div>
             </div><!-- col-6 -->
-            <div class="col-md-6">
+            {{-- <div class="col-md-6">
               <div class="form-group bd-t-0-force">
                 <label class="form-control-label">Petugas BMN</label>
-                <input class="form-control" type="text" value="{{ $permintaanAtk->fVerif->pegawai->nama }}" readonly>  
+                <input class="form-control" type="text" value="{{ $permintaanAtk->fPetugasBmn->pegawai->nama ?? ""}}" readonly>  
               </div>
-            </div><!-- col-6 -->
+            </div><!-- col-6 --> --}}
             <div class="col-md-6">
               <div class="form-group mg-md-l--1 bd-t-0-force">
                 <label class="form-control-label">Jenis</label>
@@ -80,7 +80,7 @@
               </div>
             </div><!-- col-6 -->
 
-            <input type="hidden" name="status" value="Pengajuan">
+            <input type="hidden" name="status" value="Acc PPK">
 
             <div class="col-md-12">
               <div class="form-group bd-t-0-force">

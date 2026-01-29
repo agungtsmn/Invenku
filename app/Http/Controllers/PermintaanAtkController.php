@@ -15,23 +15,31 @@ class PermintaanAtkController extends Controller
     public function index()
     {   
         if (Auth::user()->role == 'Super Admin') { // Super Admin
-            $permintaanAtks = PermintaanAtk::latest()->with(['fPemohon', 'fPetugas', 'fVerif', 'fPenanggungJawab'])->get();
+            $permintaanAtks = PermintaanAtk::latest()->with(['fPemohon', 'fPetugas', 'fPetugasBmn', 'fKatim'])->get();
             return view('content.admin.permintaanAtk.index', compact('permintaanAtks'));
 
         } elseif (Auth::user()->role == 'Petugas') { // Petugas
-            $permintaanAtks = PermintaanAtk::latest()->where('petugas', Auth::user()->id)->with(['fPemohon', 'fPetugas', 'fVerif', 'fPenanggungJawab'])->get();
+            $permintaanAtks = PermintaanAtk::latest()->where('petugas', Auth::user()->id)->with(['fPemohon', 'fPetugas', 'fPetugasBmn', 'fKatim'])->get();
             return view('content.permintaanAtk.index', compact('permintaanAtks'));
 
-        } elseif (Auth::user()->role == 'Penanggung Jawab') { // Penanggung Jawab
-            $permintaanAtks = PermintaanAtk::latest()->where('status', 'Draf')->where('penanggung_jawab', Auth::user()->id)->with(['fPemohon', 'fPetugas', 'fVerif', 'fPenanggungJawab'])->get();
+        } elseif (Auth::user()->role == 'Katim') { // Katim
+            $permintaanAtks = PermintaanAtk::latest()->where('katim', Auth::user()->id)->with(['fPemohon', 'fPetugas', 'fPetugasBmn', 'fKatim'])->get();
             return view('content.permintaanAtk.index', compact('permintaanAtks'));
 
-        } elseif (Auth::user()->role == 'Verifikator') { // Verifikator (Permintaan ATK dengan status pengajuan)
-            $permintaanAtks = PermintaanAtk::latest()->where('status', 'Pengajuan')->where('verifikator', Auth::user()->id)->with(['fPemohon', 'fPetugas', 'fVerif', 'fPenanggungJawab'])->get();
+        } elseif (Auth::user()->role == 'PPK') { // PPK
+            $permintaanAtks = PermintaanAtk::latest()->where('status', 'Acc Katim')->with(['fPemohon', 'fPetugas', 'fPetugasBmn', 'fKatim'])->get();
             return view('content.permintaanAtk.index', compact('permintaanAtks'));
 
         } elseif (Auth::user()->role == 'Kasubag TU') { // Kasubag TU (Permintaan ATK dengan status diterima)
-            $permintaanAtks = PermintaanAtk::latest()->whereIn('status', ['Diterima', 'Disetujui'])->with(['fPemohon', 'fPetugas', 'fVerif', 'fPenanggungJawab'])->get();
+            $permintaanAtks = PermintaanAtk::latest()->where('status', 'Acc PPK')->with(['fPemohon', 'fPetugas', 'fPetugasBmn', 'fKatim'])->get();
+            return view('content.permintaanAtk.index', compact('permintaanAtks'));
+
+        } elseif (Auth::user()->role == 'Petugas BMN') { // Petugas BMN
+            $permintaanAtks = PermintaanAtk::latest()->whereIn('status', ['Acc PPK', 'Acc Kasubag'])->with(['fPemohon', 'fPetugas', 'fPetugasBmn', 'fKatim'])->get();
+            return view('content.permintaanAtk.index', compact('permintaanAtks'));
+
+        } elseif (Auth::user()->role == 'Resepsionis') { // Petugas BMN
+            $permintaanAtks = PermintaanAtk::latest()->whereIn('status', ['Pembelian', 'Tersedia', 'Selesai'])->with(['fPemohon', 'fPetugas', 'fPetugasBmn', 'fKatim'])->get();
             return view('content.permintaanAtk.index', compact('permintaanAtks'));
 
         } else {
@@ -44,12 +52,12 @@ class PermintaanAtkController extends Controller
     public function create()
     {
         $pegawais = Pegawai::latest()->get();
-        $penanggungJawabs = User::where('role', 'Penanggung Jawab')->get();
-        $verifikators = User::where('role', 'Verifikator')->get();
+        $katims = User::where('role', 'Katim')->get();
+        $petugasBmns = User::where('role', 'Petugas BMN')->get();
         if (Auth::user()->role == "Super Admin") {
-            return view('content.admin.permintaanAtk.create', compact('pegawais', 'verifikators', 'penanggungJawabs'));
+            return view('content.admin.permintaanAtk.create', compact('pegawais', 'katims', 'petugasBmns'));
         } elseif (Auth::user()->role == "Petugas") {
-            return view('content.permintaanAtk.create', compact('pegawais', 'verifikators', 'penanggungJawabs'));
+            return view('content.permintaanAtk.create', compact('pegawais', 'katims', 'petugasBmns'));
         }
     }
 
@@ -82,8 +90,7 @@ class PermintaanAtkController extends Controller
         $validation = $req->validate([
             'pemohon' => 'required',
             'petugas' => 'required',
-            'verifikator' => 'required',
-            'penanggung_jawab' => 'required',
+            'katim' => 'required',
             'signature_pemohon' => 'required',
             'nomor' => 'required',
             'atk' => 'required',
@@ -121,7 +128,7 @@ class PermintaanAtkController extends Controller
         $pegawais = Pegawai::latest()->get();
         $verifikators = User::where('role', 'Verifikator')->get();
         $penanggungJawabs = User::where('role', 'Penanggung Jawab')->get();
-        // $permintaanAtk = PermintaanAtk::where('id', $permintaanAtk->id)->with(['fPemohon', 'fVerif', 'fPenanggungJawab'])->first();
+        // $permintaanAtk = PermintaanAtk::where('id', $permintaanAtk->id)->with(['fPemohon', 'fPetugasBmn', 'fKatim'])->first();
         if (Auth::user()->role == "Super Admin") {
             return view('content.admin.permintaanAtk.edit', compact('pegawais', 'verifikators', 'penanggungJawabs', 'permintaanAtk'));
         } elseif (Auth::user()->role == "Petugas") {
@@ -204,13 +211,13 @@ class PermintaanAtkController extends Controller
     }
 
 
-    public function check(PermintaanAtk $permintaanAtk)
+    public function cekKatim(PermintaanAtk $permintaanAtk) // Proses cek Katim 🚀
     {
-        return view('content.permintaanAtk.check', compact('permintaanAtk'));
+        return view('content.permintaanAtk.cekKatim', compact('permintaanAtk'));
     }
 
 
-    public function accepted(Request $req, PermintaanAtk $permintaanAtk)
+    public function accKatim(Request $req, PermintaanAtk $permintaanAtk)
     {
         $validation = $req->validate([
             'status' => 'required',
@@ -218,73 +225,37 @@ class PermintaanAtkController extends Controller
         
         $permintaanAtk->update($validation);
 
-        Alert::toast('Pengajuan diterima!', 'success');
+        Alert::toast('Pengajuan disetujui!', 'success');
         return redirect('/permintaanAtk');
     }
 
 
-    public function verifing(PermintaanAtk $permintaanAtk)
+    public function cekPpk(PermintaanAtk $permintaanAtk) // Proses cek PPK 🚀
     {
-        return view('content.permintaanAtk.verifing', compact('permintaanAtk'));
+        return view('content.permintaanAtk.cekPpk', compact('permintaanAtk'));
     }
 
 
-    public function verifid(Request $req, PermintaanAtk $permintaanAtk)
+    public function accPpk(Request $req, PermintaanAtk $permintaanAtk)
     {   
-        // Menyimpan array ke dalam variabel
-        $namaAtk = $req->input('nama');
-        $jumlahAtk = $req->input('jumlah');
-        $satuanAtk = $req->input('satuan');
-        $spesifikasiAtk = $req->input('spesifikasi');
-        $kesediaanAtk = $req->input('kesediaan');
-
-        $arrayAtk = [];
-
-        //  Memasukkan array ke dalam variabel arrayAtk
-        for ($i = 0; $i < count($namaAtk); $i++) {
-            $arrayAtk[] = [
-                'nama'              => $namaAtk[$i],
-                'jumlah'            => $jumlahAtk[$i],
-                'satuan'            => $satuanAtk[$i],
-                'spesifikasi'       => $spesifikasiAtk[$i],
-                'kesediaan'         => $kesediaanAtk[$i] ?? 'Tidak Tersedia',
-            ];
-        }
-
-        $req['atk'] = $arrayAtk;
-        
         $validation = $req->validate([
-            'atk' => 'required',
             'status' => 'required',
-            'signature_verifikator' => 'required',
         ]);
-
-        // Proses merubah nama file tanda tangan agar tidak base64
-        $signature = $req->signature_verifikator;
-        $signature = str_replace('data:image/png;base64,', '', $signature);
-        $signature = str_replace(' ', '+', $signature);
-        $signatureName = 'signature_verifikator_' . time() . '.png';
-
-        // Proses simpan tanda tangan
-        Storage::disk('public')->put("signature-verifikator/$signatureName", base64_decode($signature));
-
-        // Ganti isi field di $validation agar hanya simpan nama file, bukan base64
-        $validation['signature_verifikator'] = $signatureName;
         
         $permintaanAtk->update($validation);
 
-        Alert::toast('Pengajuan diterima!', 'success');
+        Alert::toast('Pengajuan disetujui!', 'success');
         return redirect('/permintaanAtk');
     }
 
 
-    public function approval(Request $req, PermintaanAtk $permintaanAtk)
+    public function cekKasubag(Request $req, PermintaanAtk $permintaanAtk) // Proses cek Kasubag 🚀
     {
-        return view('content.permintaanAtk.approval', compact('permintaanAtk'));
+        return view('content.permintaanAtk.cekKasubag', compact('permintaanAtk'));
     }
 
     
-    public function approved(Request $req, PermintaanAtk $permintaanAtk)
+    public function accKasubag(Request $req, PermintaanAtk $permintaanAtk)
     {   
         // Membuat nomor surat otomatis
         $last = PermintaanAtk::orderBy('created_at', 'desc')->first();
@@ -302,28 +273,112 @@ class PermintaanAtkController extends Controller
 
         $req['nomor'] = $nomorBaru;
 
-        $validation = $req->validate([
-            'nomor' => 'required',
-            'status' => 'required',
-            'signature_kasubag_tu' => 'required',
-        ]);
+        if (Auth::user()->pegawai?->tandaTangan?->tanda_tangan) {
+            $req['signature_kasubag_tu'] = Auth::user()->pegawai->tandaTangan->tanda_tangan;
+        } else {
+            Alert::toast('Anda belum menginputkan tada tangan!', 'warning');
+            return redirect('/tanda-tangan');
+        }
 
-        // Proses merubah nama file tanda tangan agar tidak base64
-        $signature = $req->signature_kasubag_tu;
-        $signature = str_replace('data:image/png;base64,', '', $signature);
-        $signature = str_replace(' ', '+', $signature);
-        $signatureName = 'signature_kasubag_tu_' . time() . '.png';
+        // Cek role
+        $role = Auth::user()->role;
+        
+        if ($role == "Kasubag TU") {
+            $validation = $req->validate([
+                'nomor' => 'required',
+                'status' => 'required',
+                'signature_kasubag_tu' => 'required',
+            ]);
+        } elseif ($role == "Petugas BMN") {
+            $req['atas_nama'] = Auth::user()->pegawai->id;
 
-        // Proses simpan tanda tangan
-        Storage::disk('public')->put("signature-kasubag-tu/$signatureName", base64_decode($signature));
-
-        // Ganti isi field di $validation agar hanya simpan nama file, bukan base64
-        $validation['signature_kasubag_tu'] = $signatureName;
+            $validation = $req->validate([
+                'nomor' => 'required',
+                'status' => 'required',
+                'atas_nama' => 'required',
+            ]);
+        } else {
+            Alert::toast('Anda tidak diizinkan untuk melakukan proses ini!', 'success');
+            return redirect('/permintaanAtk');
+        }
         
         $permintaanAtk->update($validation);
 
         Alert::toast('Pengajuan disetujui!', 'success');
         return redirect('/permintaanAtk');
+    }
+
+
+    public function cekBmn(PermintaanAtk $permintaanAtk)
+    {
+        return view('content.permintaanAtk.cekBmn', compact('permintaanAtk'));
+    }
+
+
+    public function accBmn(Request $req, PermintaanAtk $permintaanAtk)
+    {   
+        if (Auth::user()->pegawai?->tandaTangan?->tanda_tangan) {
+            $req['signature_petugas_bmn'] = Auth::user()->pegawai->tandaTangan->tanda_tangan;
+        } else {
+            Alert::toast('Anda belum menginputkan tada tangan!', 'warning');
+            return redirect('/tanda-tangan');
+        }
+
+        $validation = $req->validate([
+            'petugas_bmn' => 'required',
+            'status' => 'required',
+            'signature_petugas_bmn' => 'required',
+        ]);
+        
+        $permintaanAtk->update($validation);
+
+        Alert::toast('Pengajuan disetujui!', 'success');
+        return redirect('/permintaanAtk');
+    }
+
+
+    public function cekKesediaan(PermintaanAtk $permintaanAtk)
+    {
+        return view('content.permintaanAtk.cekKesediaan', compact('permintaanAtk'));
+    }
+
+
+    public function konfirmasiKesediaan(Request $req, PermintaanAtk $permintaanAtk)
+    {   
+        $validation = $req->validate([
+            'status' => 'required',
+        ]);
+        
+        $permintaanAtk->update($validation);
+
+        Alert::toast('ATK Tersedia, Segera Kabari Pemohon!', 'success');
+        return redirect('/permintaanAtk');
+    }
+
+
+    public function cekSelesai(PermintaanAtk $permintaanAtk)
+    {
+        return view('content.permintaanAtk.cekSelesai', compact('permintaanAtk'));
+    }
+
+
+    public function konfirmasiSelesai(Request $req, PermintaanAtk $permintaanAtk)
+    {   
+        $validation = $req->validate([
+            'status' => 'required',
+        ]);
+        
+        $permintaanAtk->update($validation);
+
+        Alert::toast('Pengajuan Permintaan ATK Selesai!', 'success');
+        return redirect('/permintaanAtk');
+    }
+
+
+    public function listAtk()
+    {
+        $permintaanAtks = PermintaanAtk::latest()->with(['fPemohon', 'fPetugas', 'fPetugasBmn', 'fKatim'])->get();
+        return view('content.permintaanAtk.list', compact('permintaanAtks'));
     }
 
     

@@ -12,6 +12,7 @@ use App\Http\Controllers\PermintaanAtkController;
 use App\Http\Controllers\PeminjamanRuangController;
 use App\Http\Controllers\PengembalianBmnController;
 use App\Http\Controllers\PeminjamanKendaraanController;
+use App\Http\Controllers\TandaTanganController;
 
 Route::middleware(['guest'])->group(function()
 {
@@ -39,7 +40,7 @@ Route::middleware(['checkRole:Super Admin'])->group(function()
 });
 
 // Ekspor PDF (untuk 5 role)
-Route::middleware(['checkRole:Petugas,Verifikator,Penanggung Jawab,Kasubag TU,Super Admin'])->group(function () {
+Route::middleware(['checkRole:Petugas,Petugas BMN,Katim,Kasubag TU,Super Admin'])->group(function () {
 
     // Ekspor form permintaan Atk
     Route::get('/permintaanAtk/{permintaanAtk}/pdf', [PdfController::class, 'permintaanAtkPdf']);
@@ -55,7 +56,7 @@ Route::middleware(['checkRole:Petugas,Verifikator,Penanggung Jawab,Kasubag TU,Su
 });
 
 // Menampilkan data permintaan Atk, peminjaman, dll
-Route::middleware(['checkRole:Petugas,Verifikator,Penanggung Jawab,Kasubag TU'])->group(function () {
+Route::middleware(['checkRole:Petugas,Petugas BMN,Katim,PPK,Kasubag TU,Resepsionis'])->group(function () {
 
     // Menampilkan data permintaan Atk
     Route::get('/permintaanAtk', [PermintaanAtkController::class, 'index']);
@@ -102,12 +103,12 @@ Route::middleware(['checkRole:Petugas'])->group(function () {
     // Route::delete('/peminjamanBmn/{peminjamanBmn}', [PeminjamanBmnController::class, 'destroy']);
 });
 
-// Penanggung jawab mengecek permintaan Atk, peminjaman, dll
-Route::middleware(['checkRole:Penanggung Jawab'])->group(function () {
+// Katim mengAcc permintaan Atk, peminjaman, dll
+Route::middleware(['checkRole:Katim'])->group(function () {
 
     // Mengecek permintaan Atk
-    Route::get('/permintaanAtk/{permintaanAtk}/check', [PermintaanAtkController::class, 'check']);
-    Route::put('/permintaanAtk/{permintaanAtk}/accepted', [PermintaanAtkController::class, 'accepted']);
+    Route::get('/permintaanAtk/{permintaanAtk}/cekKatim', [PermintaanAtkController::class, 'cekKatim']);
+    Route::put('/permintaanAtk/{permintaanAtk}/accKatim', [PermintaanAtkController::class, 'accKatim']);
 
     // Mengecek peminjaman ruang
     Route::get('/peminjamanRuang/{peminjamanRuang}/check', [PeminjamanRuangController::class, 'check']);
@@ -122,32 +123,32 @@ Route::middleware(['checkRole:Penanggung Jawab'])->group(function () {
     // Route::put('/peminjamanBmn/{peminjamanBmn}/accepted', [PeminjamanBmnController::class, 'accepted']);
 });
 
-// Verifikator memverifikasi permintaan Atk, peminjaman, dll
-Route::middleware(['checkRole:Verifikator'])->group(function () {
+// PPK mengAcc permintaan Atk, peminjaman, dll
+Route::middleware(['checkRole:PPK'])->group(function () {
 
-    // Memverifikasi permintaan Atk
-    Route::get('/permintaanAtk/{permintaanAtk}/verifing', [PermintaanAtkController::class, 'verifing']);
-    Route::put('/permintaanAtk/{permintaanAtk}/verifid', [PermintaanAtkController::class, 'verifid']);
+    // Mengecek permintaan Atk
+    Route::get('/permintaanAtk/{permintaanAtk}/cekPpk', [PermintaanAtkController::class, 'cekPpk']);
+    Route::put('/permintaanAtk/{permintaanAtk}/accPpk', [PermintaanAtkController::class, 'accPpk']);
 
-    // Memverifikasi peminjaman ruang
-    Route::get('/peminjamanRuang/{peminjamanRuang}/verifing', [PeminjamanRuangController::class, 'verifing']);
-    Route::put('/peminjamanRuang/{peminjamanRuang}/verifid', [PeminjamanRuangController::class, 'verifid']);
+    // Mengecek peminjaman ruang
+    // Route::get('/peminjamanRuang/{peminjamanRuang}/check', [PeminjamanRuangController::class, 'check']);
+    // Route::put('/peminjamanRuang/{peminjamanRuang}/accepted', [PeminjamanRuangController::class, 'accepted']);
 
-    // Memverifikasi peminjaman kendaraan
-    Route::get('/peminjamanKendaraan/{peminjamanKendaraan}/verifing', [PeminjamanKendaraanController::class, 'verifing']);
-    Route::put('/peminjamanKendaraan/{peminjamanKendaraan}/verifid', [PeminjamanKendaraanController::class, 'verifid']);
+    // Mengecek peminjaman kendaraan
+    // Route::get('/peminjamanKendaraan/{peminjamanKendaraan}/check', [PeminjamanKendaraanController::class, 'check']);
+    // Route::put('/peminjamanKendaraan/{peminjamanKendaraan}/accepted', [PeminjamanKendaraanController::class, 'accepted']);
 
-    // Memverifikasi peminjaman Bmn
-    // Route::get('/peminjamanBmn/{peminjamanBmn}/verifing', [PeminjamanBmnController::class, 'verifing']);
-    // Route::put('/peminjamanBmn/{peminjamanBmn}/verifid', [PeminjamanBmnController::class, 'verifid']);
+    // Mengecek peminjaman Bmn
+    // Route::get('/peminjamanBmn/{peminjamanBmn}/check', [PeminjamanBmnController::class, 'check']);
+    // Route::put('/peminjamanBmn/{peminjamanBmn}/accepted', [PeminjamanBmnController::class, 'accepted']);
 });
 
-// Kasubah TU menyetujui permintaan Atk, peminjaman, dll
-Route::middleware(['checkRole:Kasubag TU'])->group(function () {
+// Kasubag TU / Petugas BMN mengAcc permintaan Atk, peminjaman, dll
+Route::middleware(['checkRole:Kasubag TU,Petugas BMN'])->group(function () {
 
     // Menyetujui permintaan Atk
-    Route::get('/permintaanAtk/{permintaanAtk}/approval', [PermintaanAtkController::class, 'approval']);
-    Route::put('/permintaanAtk/{permintaanAtk}/approved', [PermintaanAtkController::class, 'approved']);
+    Route::get('/permintaanAtk/{permintaanAtk}/cekKasubag', [PermintaanAtkController::class, 'cekKasubag']);
+    Route::put('/permintaanAtk/{permintaanAtk}/accKasubag', [PermintaanAtkController::class, 'accKasubag']);
 
     // Menyetujui peminjaman ruang
     Route::get('/peminjamanRuang/{peminjamanRuang}/approval', [PeminjamanRuangController::class, 'approval']);
@@ -162,8 +163,36 @@ Route::middleware(['checkRole:Kasubag TU'])->group(function () {
     // Route::put('/peminjamanBmn/{peminjamanBmn}/approved', [PeminjamanBmnController::class, 'approved']);
 });
 
-// Penanggung Jawab, verifikator, dan kasubag TU menolak permintaan Atk, peminjaman, dall
-Route::middleware(['checkRole:Verifikator,Penanggung Jawab,Kasubag TU'])->group(function () {
+// Petugas BMN mengAcc permintaan Atk, peminjaman, dll
+Route::middleware(['checkRole:Petugas BMN'])->group(function () {
+
+    // Memverifikasi permintaan Atk
+    Route::get('/permintaanAtk/{permintaanAtk}/cekBmn', [PermintaanAtkController::class, 'cekBmn']);
+    Route::put('/permintaanAtk/{permintaanAtk}/accBmn', [PermintaanAtkController::class, 'accBmn']);
+
+    // Memverifikasi peminjaman ruang
+    Route::get('/peminjamanRuang/{peminjamanRuang}/verifing', [PeminjamanRuangController::class, 'verifing']);
+    Route::put('/peminjamanRuang/{peminjamanRuang}/verifid', [PeminjamanRuangController::class, 'verifid']);
+
+    // Memverifikasi peminjaman kendaraan
+    Route::get('/peminjamanKendaraan/{peminjamanKendaraan}/verifing', [PeminjamanKendaraanController::class, 'verifing']);
+    Route::put('/peminjamanKendaraan/{peminjamanKendaraan}/verifid', [PeminjamanKendaraanController::class, 'verifid']);
+
+    // Memverifikasi peminjaman Bmn
+    // Route::get('/peminjamanBmn/{peminjamanBmn}/verifing', [PeminjamanBmnController::class, 'verifing']);
+    // Route::put('/peminjamanBmn/{peminjamanBmn}/verifid', [PeminjamanBmnController::class, 'verifid']);
+});
+
+// Katim, Petugas BMN, dan kasubag TU menolak permintaan Atk, peminjaman, dll dengan seluruh status
+Route::middleware(['checkRole:Petugas BMN,Katim,Kasubag TU'])->group(function () {
+
+    // Menolak permintaan Atk
+    Route::get('permintaanAtk/list', [PermintaanAtkController::class, 'listAtk']);
+
+});
+
+// PPK, Petugas BMN, dan kasubag TU menolak permintaan Atk, peminjaman, dall
+Route::middleware(['checkRole:Petugas BMN,PPK,Kasubag TU'])->group(function () {
 
     // Menolak permintaan Atk
     Route::put('/permintaanAtk/{permintaanAtk}/declined', [PermintaanAtkController::class, 'declined']);
@@ -176,5 +205,31 @@ Route::middleware(['checkRole:Verifikator,Penanggung Jawab,Kasubag TU'])->group(
 
     // Menolak peminjaman Bmn
     // Route::put('/peminjamanBmn/{peminjamanBmn}/declined', [PeminjamanBmnController::class, 'declined']);
+});
+
+Route::middleware(['checkRole:Resepsionis'])->group(function () {
+
+    // Menampilkan halaman konfirmasi kesediaan ATK
+    Route::get('permintaanAtk/{permintaanAtk}/cekKesediaan', [PermintaanAtkController::class, 'cekKesediaan']);
+
+    // Mengkonfirmasi kesediaan ATK
+    Route::put('permintaanAtk/{permintaanAtk}/konfirmasiKesediaan', [PermintaanAtkController::class, 'konfirmasiKesediaan']);
+
+    // Menampilkan halaman konfirmasi selesai ATK
+    Route::get('permintaanAtk/{permintaanAtk}/cekSelesai', [PermintaanAtkController::class, 'cekSelesai']);
+
+    // Mengkonfirmasi selesai ATK
+    Route::put('permintaanAtk/{permintaanAtk}/konfirmasiSelesai', [PermintaanAtkController::class, 'konfirmasiSelesai']);
+
+});
+
+Route::middleware(['checkRole:Petugas BMN,Kasubag TU'])->group(function () {
+
+    // Menampilkan halaman upload tanda tangan
+    Route::get('/tanda-tangan', [TandaTanganController::class, 'index']);
+
+    // Upload tanda tangan ke sistem
+    Route::post('/tanda-tangan', [TandaTanganController::class, 'store']);
+
 });
 

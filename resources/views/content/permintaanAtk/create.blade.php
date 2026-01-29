@@ -42,7 +42,7 @@
         <form id="signature-form" class="form-layout form-layout-2" action="/permintaanAtk" method="post">
           @csrf
           <div class="row no-gutters">
-            <div class="col-md-6">
+            <div class="col-md-12">
               <div class="form-group">
                 <label class="form-control-label mg-b-0-force">Pemohon <span class="tx-danger">*</span></label>
                 <select class="form-control select2-show-search" name="pemohon" data-placeholder="Pilih Pegawai" required>
@@ -57,29 +57,15 @@
               </div>
             </div><!-- col-6 -->
             <div class="col-md-6">
-              <div class="form-group mg-md-l--1">
-                <label class="form-control-label mg-b-0-force">Penanggung Jawab <span class="tx-danger">*</span></label>
-                <select class="form-control select2-show-search" name="penanggung_jawab" data-placeholder="Pilih Penanggung Jawab" required>
-                  <option label="Pilih Penanggung Jawab"></option>
-                  @foreach ($penanggungJawabs as $penanggungJawab)
-                    <option value="{{ $penanggungJawab->id }}">{{ $penanggungJawab->pegawai->nama }}</option>
-                  @endforeach
-                </select>
-                @error('penanggung_jawab')  
-                  <span style="color: #ed5646; font-size: 12px">{{ $message }}</span>
-                @enderror
-              </div>
-            </div><!-- col-6 -->
-            <div class="col-md-6">
               <div class="form-group bd-t-0-force">
-                <label class="form-control-label mg-b-0-force">Petugas BMN <span class="tx-danger">*</span></label>
-                <select class="form-control select2-show-search" name="verifikator" data-placeholder="Pilih Petugas BMN" required>
-                  <option label="Pilih Verifikator"></option>
-                  @foreach ($verifikators as $verifikator)
-                    <option value="{{ $verifikator->id }}">{{ $verifikator->pegawai->nama }}</option>
+                <label class="form-control-label mg-b-0-force">Katim <span class="tx-danger">*</span></label>
+                <select class="form-control select2-show-search" name="katim" data-placeholder="Pilih Katim" required>
+                  <option label="Pilih Katim"></option>
+                  @foreach ($katims as $katim)
+                    <option value="{{ $katim->id }}">{{ $katim->pegawai->nama }}</option>
                   @endforeach
                 </select>
-                @error('verifikator')  
+                @error('katim')  
                   <span style="color: #ed5646; font-size: 12px">{{ $message }}</span>
                 @enderror
               </div>
@@ -116,7 +102,7 @@
               </div>
             </div><!-- col-6 -->
 
-            <input type="hidden" name="status" value="Draf">
+            <input type="hidden" name="status" value="Pengajuan">
 
             <div class="col-md-12" id="col-atk"> <!-- Col ATK -->
               <div class="row no-gutters row-atk"> <!-- Row ATK -->

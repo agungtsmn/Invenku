@@ -31,4 +31,9 @@ class Pegawai extends Model
     {
         return $this->hasMany(PeminjamanRuang::class);
     }
+
+    public function tandaTangan()
+    {
+         return $this->hasOne(TandaTangan::class);
+    }
 }

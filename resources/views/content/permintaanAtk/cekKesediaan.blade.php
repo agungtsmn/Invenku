@@ -28,39 +28,39 @@
       <nav class="breadcrumb pd-0 mg-0 tx-12">
         <a class="breadcrumb-item" href="/dashboard">Invenku Pusmendik</a>
         <a class="breadcrumb-item" href="/permintaanAtk">Permintaan ATK</a>
-        <span class="breadcrumb-item active">Verifikasi</span>
+        <span class="breadcrumb-item active">Kesediaan</span>
       </nav>
     </div><!-- br-pageheader -->
     <div class="pd-x-20 pd-sm-x-30 pd-t-20 pd-sm-t-30">
-      <h4 class="tx-gray-800 mg-b-5">Verifikasi Permintaan ATK</h4>
-      <p class="mg-b-0">Memverifikasi Pengajuan Permintaan ATK</p>
+      <h4 class="tx-gray-800 mg-b-5">Cek Kesediaan ATK</h4>
+      <p class="mg-b-0">Proses Pengecekan Kesediaan Barang ATK</p>
     </div>
 
     <div class="br-pagebody">
       <div class="br-section-wrapper">
 
-        <form id="signature-form" class="form-layout form-layout-2" action="/permintaanAtk/{{ $permintaanAtk->id }}/verifid" method="post">
+        <form class="form-layout form-layout-2" action="/permintaanAtk/{{ $permintaanAtk->id }}/konfirmasiKesediaan" id="accept{{ $permintaanAtk->id }}" method="post">
           @csrf
           @method('put')
           <div class="row no-gutters">
-            <div class="col-md-6">
+            <div class="col-md-12">
               <div class="form-group">
                 <label class="form-control-label">Pemohon</label>
                 <input class="form-control" type="text" value="{{ $permintaanAtk->fPemohon->nama }}" readonly>  
               </div>
             </div><!-- col-6 -->
             <div class="col-md-6">
-              <div class="form-group mg-md-l--1">
+              <div class="form-group bd-t-0-force">
                 <label class="form-control-label">Penanggung Jawab</label>
-                <input class="form-control" type="text" value="{{ $permintaanAtk->fPenanggungJawab->pegawai->nama }}" readonly>  
+                <input class="form-control" type="text" value="{{ $permintaanAtk->fKatim->pegawai->nama }}" readonly>  
               </div>
             </div><!-- col-6 -->
-            <div class="col-md-6">
+            {{-- <div class="col-md-6">
               <div class="form-group bd-t-0-force">
                 <label class="form-control-label">Petugas BMN</label>
-                <input class="form-control" type="text" value="{{ $permintaanAtk->fVerif->pegawai->nama }}" readonly>  
+                <input class="form-control" type="text" value="{{ $permintaanAtk->fPetugasBmn->pegawai->nama ?? ""}}" readonly>  
               </div>
-            </div><!-- col-6 -->
+            </div><!-- col-6 --> --}}
             <div class="col-md-6">
               <div class="form-group mg-md-l--1 bd-t-0-force">
                 <label class="form-control-label">Jenis</label>
@@ -78,9 +78,9 @@
                 <label class="form-control-label">Lokasi</label>
                 <input class="form-control" type="text" value="{{ $permintaanAtk->lokasi }}" readonly>  
               </div>
-            </div><!-- col-6 -->  
+            </div><!-- col-6 -->
 
-            <input type="hidden" name="status" value="Diterima">
+            <input type="hidden" name="status" value="Tersedia">
 
             <div class="col-md-12">
               <div class="form-group bd-t-0-force">
@@ -93,59 +93,42 @@
                 <div class="row no-gutters row-atk"> <!-- Row ATK -->
                   <div class="col-md-3">
                     <div class="form-group bd-t-0-force">
-                      <label class="form-control-label"> Nama ATK <span class="tx-danger">*</span></label>
+                      <label class="form-control-label"> Nama ATK</label>
                       <input class="form-control" type="text" name="nama[{{ $loop->iteration - 1 }}]" placeholder="Enter Nama ATK" value="{{ $atk['nama'] }}" readonly>
                     </div>
                   </div><!-- col-3 -->
-                  <div class="col-md-2">
-                    <div class="form-group bd-t-0-force bd-l-0-force">
-                      <label class="form-control-label"> Jumlah <span class="tx-danger">*</span></label>
+                  <div class="col-md-3">
+                    <div class="form-group bd-t-0-force">
+                      <label class="form-control-label"> Jumlah</label>
                       <input class="form-control" type="text" name="jumlah[{{ $loop->iteration - 1 }}]" placeholder="Enter Jumlah" value="{{ $atk['jumlah'] }}" readonly>
                     </div>
                   </div><!-- col-3 -->
-                  <div class="col-md-2">
-                    <div class="form-group bd-t-0-force bd-l-0-force">
-                      <label class="form-control-label"> Satuan <span class="tx-danger">*</span></label>
+                  <div class="col-md-3">
+                    <div class="form-group bd-t-0-force">
+                      <label class="form-control-label"> Satuan</label>
                       <input class="form-control" type="text" name="satuan[{{ $loop->iteration - 1 }}]" placeholder="Enter Satuan" value="{{ $atk['satuan'] }}" readonly>
                     </div>
                   </div><!-- col-3 -->
                   <div class="col-md-3">
-                    <div class="form-group bd-t-0-force bd-l-0-force">
-                      <label class="form-control-label"> Spesifikasi <span class="tx-danger">*</span></label>
+                    <div class="form-group bd-t-0-force">
+                      <label class="form-control-label"> Spesifikasi</label>
                       <input class="form-control" type="text" name="spesifikasi[{{ $loop->iteration - 1 }}]" placeholder="Enter Spesifikasi" value="{{ $atk['spesifikasi'] }}" readonly>
-                    </div>
-                  </div><!-- col-3 -->
-                  <div class="col-md-2">
-                    <div class="form-group bd-t-0-force bd-l-0-force mg-md-r--1 d-flex align-items-center justify-content-center">
-                      <label class="ckbox ckbox-teal">
-                        <input type="checkbox" name="kesediaan[{{ $loop->iteration - 1 }}]" value="Tersedia">
-                        <span>Tersedia</span>
-                      </label>
                     </div>
                   </div><!-- col-3 -->
                 </div>
               @endforeach
             </div><!-- col-12 -->
-            <div class="col-md-12">
-              <div class="form-group bd-t-0-force mg-md-r--1">
-                <label class="form-control-label"> Tanda Tangan <span class="tx-danger">*</span></label>
-                <div class="d-flex align-items-enter">
-                  <canvas id="signature-pad" class="bd"></canvas>
-                  <input type="hidden" name="signature_verifikator" id="signature-input">
-                  <button type="button" onclick="clearPad()" class="btn btn-danger ml-2"><i class="bi bi-trash"></i></button>
-                </div>
-              </div>
-            </div><!-- col-12 -->
+
 
           </div><!-- row -->
           <div class="form-layout-footer bd pd-20 bd-t-0">
-            <button data-kode="{{ $permintaanAtk->id }}" type="button" class="btn btn-success tx-10 pd-x-10 pd-y-5 verifid-confirm"><i class="bi bi-patch-check-fill"></i> Acepted</button>
-            <a class="btn btn-danger tx-10 pd-x-10 pd-y-5 text-light tx-medium" data-toggle="modal" data-target="#modaldemo{{ $permintaanAtk->id }}"><i class="bi bi-patch-exclamation-fill"></i> Decline</a>
+            <button data-kode="{{ $permintaanAtk->id }}" type="button" class="btn btn-success tx-10 pd-x-10 pd-y-5 accepted-confirm"><i class="bi bi-patch-check-fill"></i> Tersedia</button>
+            {{-- <a class="btn btn-danger tx-10 pd-x-10 pd-y-5 text-light tx-medium" data-toggle="modal" data-target="#modaldemo{{ $permintaanAtk->id }}"><i class="bi bi-patch-exclamation-fill"></i> Decline</a> --}}
             <a href="/permintaanAtk" class="btn btn-secondary">Cancel</a>
           </div><!-- form-group -->
         </form><!-- form-layout -->
 
-        {{-- Modal Decline --}}
+        {{-- Modal ATK --}}
         <div id="modaldemo{{ $permintaanAtk->id }}" class="modal fade">
           <div class="modal-dialog modal w-100" role="document">
             <form class="modal-content bd-0 tx-14" method="POST" id="decline{{ $permintaanAtk->id }}" action="/permintaanAtk/{{ $permintaanAtk->id }}/declined">
@@ -201,10 +184,8 @@
 
   <script src="{{ asset('template') }}/js/bracket.js"></script>
 
-  <script src="https://cdn.jsdelivr.net/npm/signature_pad@4.0.0/dist/signature_pad.umd.min.js"></script>
-
   <script>
-    $(".verifid-confirm").click(function(e) {
+    $(".accepted-confirm").click(function(e) {
         id = e.target.dataset.kode;
         if (id) {
             Swal.fire({
@@ -217,7 +198,7 @@
                 cancelButtonText: 'Batal'
             }).then((result) => {
                 if (result.isConfirmed) {
-                    document.getElementById('signature-form').requestSubmit(); // mensubmit formnya tanpa button submit
+                    $('#accept' + id).submit(); // mensubmit formnya tanpa button submit
                 }
             });
         }
@@ -245,32 +226,6 @@
               form.submit();                   // native submit
           }
       });
-    });
-  </script>
-
-  <script>
-    const canvas = document.getElementById('signature-pad');
-    const signaturePad = new SignaturePad(canvas);
-
-    function clearPad() {
-      signaturePad.clear();
-    }
-
-    document.getElementById('signature-form').addEventListener('submit', function(e) {
-      if (signaturePad.isEmpty()) {
-        e.preventDefault(); // Cegah submit
-        Swal.fire({
-          title: 'Oops!',
-          text: 'Silakan tanda tangani terlebih dahulu!',
-          confirmButtonColor: '#00a48b',
-          confirmButtonText: 'Ok!',
-        });
-        // alert("Silakan tanda tangani terlebih dahulu sebelum menyimpan.");
-      } else {
-        // Kalau tidak kosong, simpan ke input hidden
-        const dataURL = signaturePad.toDataURL();
-        document.getElementById('signature-input').value = dataURL;
-      }
     });
   </script>
 

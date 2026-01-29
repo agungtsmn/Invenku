@@ -24,13 +24,13 @@ class PermintaanAtk extends Model
         return $this->belongsTo(User::class, 'petugas');
     }
 
-    public function fPenanggungJawab()
+    public function fKatim()
     {
-        return $this->belongsTo(User::class, 'penanggung_jawab');
+        return $this->belongsTo(User::class, 'katim');
     }
 
-    public function fVerif()
+    public function fPetugasBmn()
     {
-        return $this->belongsTo(User::class, 'verifikator');
+        return $this->belongsTo(User::class, 'petugas_bmn');
     }
 }

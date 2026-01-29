@@ -23,6 +23,12 @@
         margin-top: 0px;
       }
     }
+
+    @media (min-width: 992px) {
+      .br-section-wrapper {
+        padding: 40px 60px 40px 60px;
+      }
+    }
   </style>
 @endpush
 
@@ -32,26 +38,10 @@
     <div class="br-pageheader pd-y-15 pd-l-20">
       <nav class="breadcrumb pd-0 mg-0 tx-12">
         <a class="breadcrumb-item" href="/dashboard">Invenku Pusmendik</a>
-        <span class="breadcrumb-item active">Permintaan ATK / Suvenir</span>
+        <a class="breadcrumb-item" href="/manage/permintaanAtk">Permintaan ATK / Suvenir</a>
+        <span class="breadcrumb-item active">List Pengajuan ATK</span>
       </nav>
     </div><!-- br-pageheader -->
-    
-    @include('partials.crud-alert')
-
-    <div class="pd-x-20 pd-sm-x-30 pd-t-2 d-flex align-items-center justify-content-between flex-wrap">
-      <div>
-        <h4 class="tx-gray-800 mg-b-5">Permintaan ATK / Suvenir</h4>
-        <p class="mg-b-0">Pengajuan Permintaan ATK / Suvenir</p>
-      </div>
-      @php
-        $allowedRoles = ['PPK', 'Kasubag TU', 'Petugas BMN']
-      @endphp
-      @if (Auth::user()->role == 'Petugas')  
-        <a href="/permintaanAtk/create" class="btn btn-teal btn-create">Buat Pengajuan <i class="bi bi-plus"></i></a>
-      @elseif (in_array(Auth::user()->role, $allowedRoles))  
-        <a href="/permintaanAtk/list" class="btn btn-secondary btn-create">List Pengajuan <i class="bi bi-clock-history"></i></a>
-      @endif
-    </div>
 
     <div class="br-pagebody">
       <div class="br-section-wrapper">
@@ -67,7 +57,6 @@
                 <th class="wd-20p">Mengetahui</th>
                 <th class="wd-20p">Status & Nomor</th> 
                 <th class="wd-20p text-center">ATK / Suvenir</th>
-                <th class="wd-15p text-center">Action</th>
               </tr>
             </thead>
             <tbody>
@@ -95,8 +84,6 @@
                       <span class="px-2 py-1 tx-12 text-light rounded" style="background-color: #F4511E">{{ $permintaanAtk->status }}</span>
                     @elseif ($permintaanAtk->status == "Tersedia")
                       <span class="px-2 py-1 tx-12 text-light rounded" style="background-color: #00ACC1">{{ $permintaanAtk->status }}</span>
-                    @elseif ($permintaanAtk->status == "Selesai")
-                      <span class="px-2 py-1 tx-12 text-light rounded" style="background-color: #67de34">{{ $permintaanAtk->status }}</span>
                     @elseif ($permintaanAtk->status == "Ditolak")
                       <span class="px-2 py-1 tx-12 text-light rounded" style="background-color: #d22926">{{ $permintaanAtk->status }}</span>
                     @endif
@@ -154,7 +141,7 @@
                       </div><!-- modal-dialog -->
                     </div><!-- modal -->
                   </td>
-                  @if (Auth::user()->role == 'Petugas')
+                  {{-- @if (Auth::user()->role == 'Petugas')
                     <td>
                       <div class="d-flex justify-content-center">
                         @if ($permintaanAtk->status == 'Draf')
@@ -202,18 +189,7 @@
                         <a href="/permintaanAtk/{{ $permintaanAtk->id }}/cekBmn" class="btn btn-warning tx-14 pd-x-12 pd-y-7"><i class="bi bi-clipboard-check"></i> Proses</a>
                       @endif
                     </td>
-                  @endif
-                  @if (Auth::user()->role == 'Resepsionis')
-                    <td class="text-center">
-                      @if ($permintaanAtk->status == 'Pembelian')
-                        <a href="/permintaanAtk/{{ $permintaanAtk->id }}/cekKesediaan" class="btn btn-warning tx-10 pd-x-10 pd-y-5"><i class="bi bi-clipboard-check"></i> Konfirmasi Kesediaan</a>
-                      @elseif($permintaanAtk->status == 'Tersedia')
-                        <a href="/permintaanAtk/{{ $permintaanAtk->id }}/cekSelesai" class="btn btn-warning tx-10 pd-x-10 pd-y-5"><i class="bi bi-clipboard-check"></i> Konfirmasi Selesai</a>
-                      @else
-                        <i class="bi bi-patch-check-fill tx-success mr-1"></i>
-                      @endif
-                    </td>
-                  @endif
+                  @endif --}}
                 </tr>
               @endforeach
             </tbody>
@@ -253,6 +229,8 @@
 
       $('#datatable1').DataTable({
         responsive: true,
+        pageLength: 100,
+        lengthMenu: [50, 100, 200],
         language: {
           searchPlaceholder: 'Search...',
           sSearch: '',
@@ -269,27 +247,6 @@
       // Select2
       $('.dataTables_length select').select2({ minimumResultsForSearch: Infinity });
 
-    });
-  </script>
-  <script>
-    $(".swal-confirm").click(function(e) {
-        id = e.target.dataset.kode;
-        if (id) {
-            Swal.fire({
-                title: 'Anda yakin ingin menghapus?',
-                text: "Jika sudah terhapus data tidak bisa dikembalikan!",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#F5365C',
-                cancelButtonColor: '#2DCE89',
-                confirmButtonText: 'Iya, Hapus!',
-                cancelButtonText: 'Batal'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    $('#delete' + id).submit();
-                }
-            });
-        }
     });
   </script>
 @endpush

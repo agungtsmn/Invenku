@@ -15,11 +15,12 @@ return new class extends Migration
             $table->id();
             $table->foreignId('pemohon')->constrained('pegawais')->onDelete('restrict');
             $table->foreignId('petugas')->nullable()->constrained('users')->nullOnDelete();
-            $table->foreignId('verifikator')->nullable()->constrained('users')->nullOnDelete();
-            $table->foreignId('penanggung_jawab')->nullable()->constrained('users')->nullOnDelete();
+            $table->foreignId('petugas_bmn')->nullable()->constrained('users')->nullOnDelete();
+            $table->foreignId('katim')->nullable()->constrained('users')->nullOnDelete();
             $table->string('signature_pemohon')->nullable();
-            $table->string('signature_verifikator')->nullable();
+            $table->string('signature_petugas_bmn')->nullable();
             $table->string('signature_kasubag_tu')->nullable();
+            $table->bigInteger('atas_nama')->nullable();
             $table->string('nomor');
             $table->string('jenis'); // ATK / Suvenir
             $table->date('tanggal');

@@ -20,6 +20,9 @@
         </a>
         <div class="dropdown-menu dropdown-menu-header wd-200">
           <ul class="list-unstyled user-profile-nav">
+            @if (in_array(Auth::user()->role, ['Petugas BMN', 'Kasubag TU', 'PPK']))
+              <li><a href="/tanda-tangan"><i class="icon bi bi-at"></i> Tanda Tangan</a></li>
+            @endif
             <li><a href="/logout"><i class="icon bi bi-power"></i> Sign Out</a></li>
           </ul>
         </div><!-- dropdown-menu -->

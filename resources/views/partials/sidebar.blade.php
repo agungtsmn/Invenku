@@ -60,7 +60,7 @@
       </ul> --}}
     @endif
 
-    @if (in_array(Auth::user()->role, ['Petugas', 'Verifikator', 'Penanggung Jawab', 'Kasubag TU']))
+    @if (in_array(Auth::user()->role, ['Petugas', 'Petugas BMN', 'Katim', 'PPK', 'Kasubag TU', 'Resepsionis', 'Viewer']))
       <a href="/permintaanAtk" class="br-menu-link {{ Request::is('permintaanAtk') || Request::is('permintaanAtk/*') ? 'active' : '' }}">
         <div class="br-menu-item">
           <i class="menu-item-icon bi bi-box-seam tx-18"></i>
@@ -69,11 +69,11 @@
       </a><!-- br-menu-link -->
     @endif
     
-    @if (in_array(Auth::user()->role, ['Petugas', 'Verifikator', 'Kasubag TU']))
+    {{-- @if (in_array(Auth::user()->role, ['Petugas', 'Petugas BMN', 'Kasubag TU']))
       <a href="/peminjamanRuang" class="br-menu-link {{ Request::is('peminjamanRuang') || Request::is('peminjamanRuang/*') ? 'active' : '' }}">
         <div class="br-menu-item">
           <i class="menu-item-icon bi bi-building tx-18"></i>
-          <span class="menu-item-label">Peminjaman Ruang</span>
+          <span class="menu-item-label mb-0">Peminjaman Ruang</span>
         </div><!-- menu-item -->
       </a><!-- br-menu-link -->
 
@@ -83,9 +83,30 @@
           <span class="menu-item-label">Peminjaman Kendaraan</span>
         </div><!-- menu-item -->
       </a><!-- br-menu-link -->
-    @endif
+    @endif --}}
     
-    {{-- @if (in_array(Auth::user()->role, ['Verifikator', 'Penanggung Jawab', 'Kasubag TU']))
+    {{-- Coming Soon --}}
+    <hr style="border-color: #adb5bd">
+    <div class="mb-2">
+      <div class="br-menu-item">
+        <i class="menu-item-icon bi bi-building tx-18"></i>
+        <div>
+          <span class="menu-item-label mb-0">Peminjaman Ruang</span>
+          <span class="menu-item-label tx-10 bg-danger p-1 rounded">Coming Soon</span>
+        </div>
+      </div><!-- menu-item -->
+    </div><!-- br-menu-link -->
+    <div>
+      <div class="br-menu-item">
+        <i class="menu-item-icon bi bi-car-front tx-18"></i>
+        <div>
+          <span class="menu-item-label mb-0">Peminjaman Kendaraan</span>
+          <span class="menu-item-label tx-10 bg-danger p-1 rounded">Coming Soon</span>
+        </div>
+      </div><!-- menu-item -->
+    </div><!-- br-menu-link -->
+    
+    {{-- @if (in_array(Auth::user()->role, ['Petugas BMN', 'Katim', 'Kasubag TU']))
       <a href="/peminjamanBmn" class="br-menu-link {{ Request::is('peminjamanBmn') || Request::is('peminjamanBmn/*') ? 'active' : '' }}">
         <div class="br-menu-item">
           <i class="menu-item-icon bi bi-boxes tx-18"></i>
